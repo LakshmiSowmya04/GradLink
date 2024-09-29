@@ -24,10 +24,5 @@ Welcome to **GradLink**, a vibrant online community for alumni from various coll
 - Node.js and npm installed
 - MongoDB (local or cloud)
 
-### Installation
-
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/yourusername/alumniconnecter.git
-   cd GradLink
+### FRONTEND contribution
+If You would like to contribute only to frontend Please clone and make changes only to aluminiConnector-frontend and please add screenshots of your changes
