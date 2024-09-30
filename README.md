@@ -1,5 +1,6 @@
 # GradLink
 ## This repository is participating in Hacktoberfest
+## Communication channel link : https://discord.gg/gcAjda3u
 Welcome to **GradLink**, a vibrant online community for alumni from various colleges. This platform allows users to connect, share experiences, and network with fellow alumni.
 
 ## Features
