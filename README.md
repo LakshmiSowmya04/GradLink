@@ -25,4 +25,4 @@ Welcome to **GradLink**, a vibrant online community for alumni from various coll
 - MongoDB (local or cloud)
 
 ### FRONTEND contribution
-If You would like to contribute only to frontend Please clone and make changes only to aluminiConnector-frontend and please add screenshots of your changes
+If You would like to contribute only to frontend Please clone and make changes only to gradlink-ui and please add screenshots of your changes
