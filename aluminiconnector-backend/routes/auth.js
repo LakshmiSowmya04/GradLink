@@ -20,12 +20,17 @@ router.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) return res.status(400).send("User not found");
-
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(400).send("Invalid credentials");
-
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: "1h",
+  });
+  //this will be good even the schema changes in future
+  res.cookie("auth_session", token, {
+    httpOnly: true, //it will be httponly & not applied on document.cookie
+    secure: true,
+    maxAge: 3600000, // Expires in 1 hour
+    sameSite: "Lax",
   });
   res.json({ token, college: user.college, userId: user._id });
 });
