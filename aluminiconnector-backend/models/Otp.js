@@ -34,4 +34,7 @@ const OtpSchema = new mongoose.Schema({
     }
 });
 
+// Combination of action and otp code should be unique
+OtpSchema.index({ action: 1, otp: 1 }, { unique: true });
+
 module.exports = mongoose.model('Otp', OtpSchema);
