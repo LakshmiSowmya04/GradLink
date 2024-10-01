@@ -69,11 +69,20 @@ class Env {
 		if (typeof ctx !== 'string' || ctx.length === 0) {
 			throw new Error('Invalid string provided!');
 		}
+
+		ctx = ctx.trim(); // remove leading and trailing spaces
 	}
 	// Validate: number
 	number(ctx) {
-		if (typeof ctx !== 'number' || isNaN(ctx)) {
-			throw new Error('Invalid number provided!');
+		try {
+			ctx = Number(ctx);
+
+			if (typeof ctx !== 'number' || isNaN(ctx)) {
+				throw new Error('Invalid number provided!');
+			}
+		}
+		catch(err) {
+			throw new Error('Invalid number provided!', err);
 		}
 	}
 	// Validate: boolean
@@ -81,6 +90,7 @@ class Env {
 		if (typeof ctx !== 'boolean') {
 			throw new Error('Invalid boolean provided!');
 		}
+		ctx = ctx === 'true' || ctx === true;
 	}
 	// Validate: array
 	array(ctx) {
@@ -145,26 +155,27 @@ class Env {
 		// example: amqp://localhost:5672
 		// pattern: protocol://host:port?/db?/collection?...
 		const uriRegex = /^[^ "]+$/;
-  if (!uriRegex.test(ctx)) throw new Error('Invalid uri provided!');
+		if (!uriRegex.test(ctx)) throw new Error('Invalid uri provided!');
 
-  // Split the URI into protocol and the rest of the URI
-  const parts = ctx.split('://');
-  if (parts.length !== 2) throw new Error('Invalid uri provided!');
-  const [protocol, rest] = parts;
-  if (!protocol || !rest) throw new Error('Invalid uri provided!');
+		// Split the URI into protocol and the rest of the URI
+		const parts = ctx.split('://');
+		if (parts.length !== 2) throw new Error('Invalid uri provided!');
+		const [protocol, rest] = parts;
+		if (!protocol || !rest) throw new Error('Invalid uri provided!');
 
-  // Split to separate optional user info from host info
-  const userInfoSplit = rest.split('@');
-  const hostPart = userInfoSplit.length > 1 ? userInfoSplit[1] : userInfoSplit[0];
+		// Split to separate optional user info from host info
+		const userInfoSplit = rest.split('@');
+		const hostPart = userInfoSplit.length > 1 ? userInfoSplit[1] : userInfoSplit[0];
 
-  // Extract the host and the rest (port/db)
-  const [hostAndPort, ...pathParts] = hostPart.split('/');
-  const [hostname, port] = hostAndPort.split(':');
+		// Extract the host and the rest (port/db)
+		const [hostAndPort, ..._pathParts] = hostPart.split('/');
+		const [hostname, port] = hostAndPort.split(':');
 
-  if (!hostname) throw new Error('Invalid uri provided!');
-  if (port && (isNaN(port) || port < 1 || port > 65535)) throw new Error('Invalid port provided!');
-		this.unsigned(port); // validate port as valid unsigned number
+		if (!hostname) throw new Error('Invalid uri provided!');
+		if (port && (isNaN(port) || port < 1 || port > 65535)) throw new Error('Invalid port provided!');
 	}
+
+
 	// Validate: email
 	email(ctx) {
 		// email can be any character except space
@@ -173,15 +184,20 @@ class Env {
 	}
 	// Validate: unsigned
 	unsigned(ctx) {
+		this.number(ctx);
 		if (ctx < 0) throw new Error('Invalid unsigned number provided!');
 	}
 	// Validate: integer
 	integer(ctx) {
-		if (!Number.isInteger(ctx)) throw new Error('Invalid integer provided!');
+		this.number(ctx);
+		if (!Number.isInteger(Number(ctx))) throw new Error('Invalid integer provided!');
+		ctx = parseInt(ctx);
 	}
 	// Validate: float
 	float(ctx) {
-		if (isNaN(ctx)) throw new Error('Invalid float provided!');
+		this.number(ctx);
+		if (!Number.isFinite(Number(ctx))) throw new Error('Invalid float provided!');
+		ctx = parseFloat(ctx);
 	}
 };
 
