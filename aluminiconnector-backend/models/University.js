@@ -20,12 +20,6 @@ const universitySchema = new mongoose.Schema(
                 ref: "User",
             },
         ],
-        chat: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Chat",
-            },
-        ],
         post: [
             {
                 type: mongoose.Schema.Types.ObjectId,
