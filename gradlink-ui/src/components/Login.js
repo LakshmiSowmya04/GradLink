@@ -12,7 +12,7 @@ const Login = () => {
 
   useEffect(() => {
     validateForm();
-  }, [email, password, college]);
+  }, [email, password]);
 
   const validateForm = () => {
     let errors = {};
@@ -34,10 +34,6 @@ const Login = () => {
       errors["password"] = "Password must be at least 8 characters";
     }
 
-    if (!college) {
-      formIsValid = false;
-      errors["college"] = "Please select a college";
-    }
 
     setErrors(errors);
     setIsFormValid(formIsValid);
@@ -71,16 +67,9 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {errors.password && <div className="error-message">{errors.password}</div>}
+          {/* {errors.password && <div className="error-message">{errors.password}</div>} */}
         </div>
-        <div className="input-group">
-          <select value={college} onChange={(e) => setCollege(e.target.value)}>
-            <option value="">Select College</option>
-            <option value="college1">College 1</option>
-            <option value="college2">College 2</option>
-          </select>
-          {errors.college && <div className="error-message">{errors.college}</div>}
-        </div>
+        
         <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
         <p>
           New to GradLink? <a href="/signup">Sign up</a>
