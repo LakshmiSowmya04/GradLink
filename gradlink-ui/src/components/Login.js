@@ -92,10 +92,16 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+
+          {/* {errors.password && <div className="error-message">{errors.password}</div>} */}
+        </div>
+    
+        <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
           {errors.password && <div className="error-message">{errors.password}</div>}
         </div>
         {errors.form && <div className="error-message">{errors.form}</div>}
         <button disabled={!isFormValid}>Login</button>
+
         <p>
           New to GradLink? <a href="/signup">Sign up</a>
         </p>
