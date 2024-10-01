@@ -25,5 +25,11 @@ module.exports = {
 	port: parser.get('PORT', ['integer' ,'unsigned'], 5000 /* default-value */),
 	host: parser.get('HOST', ['ipv4'], '0.0.0.0' /* default-value */),
 	mongoDbUri: parser.get('MONGODB_URI', ['required', 'uri']), // required one, throws error if not found
+
+	// Email/NodeMailer configuration
+	emailServiceUser: parser.get('EMAIL_SERVICE_USER', ['required', 'email']), // required 
+	emailServicePass: parser.get('EMAIL_SERVICE_PASS', ['required', 'string']), // required
+	emailServiceHost: parser.get('EMAIL_SERVICE_HOST', ['string'], 'smtp.gmail.com'),
+	emailServicePort: parser.get('EMAIL_SERVICE_PORT', ['integer', 'unsigned'], 587),
 };
 

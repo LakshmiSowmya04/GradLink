@@ -1,19 +1,27 @@
 require('dotenv').config();
+
 const nodemailer = require('nodemailer')
+
+const { 
+    emailServiceUser, 
+    emailServicePass,
+    emailServiceHost,
+    emailServicePort
+} = require('./config/env')
 
 const sendOtp = (otp , email)=>{
     const transport = nodemailer.createTransport(
         {
-           host: 'smtp.gmail.com',
-           port: 587,
+           host: emailServiceHost,
+           port: emailServicePort,
            secure: false, // use false for STARTTLS; true for SSL on port 465
            auth: {
-             user: process.env.EMAIL_SERVICE_USER,
-             pass: process.env.EMAIL_SERVICE_PASS,
+             user: emailServiceUser,
+             pass: emailServicePass,
            }
          });
     const mailOptions = {
-        from: process.env.EMAIL_SERVICE_USER,
+        from: emailServiceUser,
         to: email,
         subject: 'Email Verification Otp from GradLink',
         text: `Your OTP is ${otp}`
