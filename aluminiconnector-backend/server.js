@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 require("dotenv").config();
+const { port, host, mongoDbUri } = require("./config/env");
 
 const app = express();
 app.use(cors());
@@ -10,7 +11,7 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI, {
+  .connect(mongoDbUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -19,5 +20,4 @@ mongoose
 
 app.use("/api/auth", authRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, host, () => console.log(`Server running on port ${port}`));
