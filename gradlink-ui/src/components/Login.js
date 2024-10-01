@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import '../styles/signup.css';
 
 const Login = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [college, setCollege] = useState("");
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     validateForm();
-  }, [email, password, college]);
+  }, [email, password]);
 
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
+
+    if (!username) {
+      formIsValid = false;
+      errors["username"] = "Username is required";
+    }
 
     if (!email) {
       formIsValid = false;
@@ -34,27 +40,42 @@ const Login = () => {
       errors["password"] = "Password must be at least 8 characters";
     }
 
-    if (!college) {
-      formIsValid = false;
-      errors["college"] = "Please select a college";
-    }
-
     setErrors(errors);
     setIsFormValid(formIsValid);
   };
 
-  const handleLogin = () => {
-    if (isFormValid) {
-      navigate("/dashboard");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/auth/login`, {
+        username,
+        password,
+      });
+      if (response.status === 200) {
+        navigate("/dashboard"); // Redirect to dashboard or any other page after successful login
+      }
+    } catch (error) {
+      setErrors({ form: error.response.data });
     }
   };
 
   return (
-    <div className="auth-container">
+    <form className="auth-container" onSubmit={handleSubmit}>
       <div className="auth-form">
         <div className="gradlink-logo">GradLink</div>
         <p className="auth-subtitle">Connect with your college community</p>
         <h2>Login</h2>
+        <div className="input-group">
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          {errors.username && <div className="error-message">{errors.username}</div>}
+        </div>
         <div className="input-group">
           <input
             type="text"
@@ -73,20 +94,13 @@ const Login = () => {
           />
           {errors.password && <div className="error-message">{errors.password}</div>}
         </div>
-        <div className="input-group">
-          <select value={college} onChange={(e) => setCollege(e.target.value)}>
-            <option value="">Select College</option>
-            <option value="college1">College 1</option>
-            <option value="college2">College 2</option>
-          </select>
-          {errors.college && <div className="error-message">{errors.college}</div>}
-        </div>
-        <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
+        {errors.form && <div className="error-message">{errors.form}</div>}
+        <button disabled={!isFormValid}>Login</button>
         <p>
           New to GradLink? <a href="/signup">Sign up</a>
         </p>
       </div>
-    </div>
+    </form>
   );
 };
 
