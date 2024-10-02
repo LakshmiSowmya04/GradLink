@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import '../styles/signup.css';
+import "../styles/signup.css";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [college, setCollege] = useState("");
-
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-
   const [role, setRole] = useState("student"); // Default role
-
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -21,11 +18,16 @@ const Signup = () => {
 
   useEffect(() => {
     validateForm();
-  }, [email, password, college, otp]);
+  }, [username, email, password, college, otp]);
 
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
+
+    if (!username) {
+      formIsValid = false;
+      errors["username"] = "Username is required";
+    }
 
     if (!email) {
       formIsValid = false;
@@ -48,7 +50,7 @@ const Signup = () => {
       errors["college"] = "Please select a college";
     }
 
-    if (otpSent && otp.some(digit => digit === "")) {
+    if (otpSent && otp.some((digit) => digit === "")) {
       formIsValid = false;
       errors["otp"] = "Please enter the complete OTP";
     }
@@ -136,7 +138,9 @@ const Signup = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          {errors.username && <div className="error-message">{errors.username}</div>}
+          {errors.username && (
+            <div className="error-message">{errors.username}</div>
+          )}
         </div>
 
         {/* Email Input */}
@@ -145,7 +149,6 @@ const Signup = () => {
             type="text"
             placeholder="Email"
             value={email}
-            required
             onChange={(e) => setEmail(e.target.value)}
           />
           {errors.email && <div className="error-message">{errors.email}</div>}
@@ -157,7 +160,6 @@ const Signup = () => {
             type="password"
             placeholder="Password"
             value={password}
-            required
             onChange={(e) => setPassword(e.target.value)}
           />
           {errors.password && <div className="error-message">{errors.password}</div>}
