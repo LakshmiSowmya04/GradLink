@@ -49,7 +49,7 @@ const Login = () => {
     if (!isFormValid) return;
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/auth/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         username,
         password,
       });
@@ -67,6 +67,8 @@ const Login = () => {
         <div className="gradlink-logo">GradLink</div>
         <p className="auth-subtitle">Connect with your college community</p>
         <h2>Login</h2>
+
+        {/* Username Input */}
         <div className="input-group">
           <input
             type="text"
@@ -76,6 +78,8 @@ const Login = () => {
           />
           {errors.username && <div className="error-message">{errors.username}</div>}
         </div>
+
+        {/* Email Input */}
         <div className="input-group">
           <input
             type="text"
@@ -85,6 +89,8 @@ const Login = () => {
           />
           {errors.email && <div className="error-message">{errors.email}</div>}
         </div>
+
+        {/* Password Input */}
         <div className="input-group">
           <input
             type="password"
@@ -92,16 +98,17 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          {/* {errors.password && <div className="error-message">{errors.password}</div>} */}
-        </div>
-    
-        <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
           {errors.password && <div className="error-message">{errors.password}</div>}
         </div>
-        {errors.form && <div className="error-message">{errors.form}</div>}
-        <button disabled={!isFormValid}>Login</button>
 
+        {/* Submit Button */}
+        <button type="submit" disabled={!isFormValid}>
+          Login
+        </button>
+
+        {errors.form && <div className="error-message">{errors.form}</div>}
+
+        {/* Signup Redirect */}
         <p>
           New to GradLink? <a href="/signup">Sign up</a>
         </p>

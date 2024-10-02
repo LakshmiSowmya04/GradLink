@@ -21,7 +21,6 @@ const Signup = () => {
 
   useEffect(() => {
     validateForm();
-
   }, [email, password, college, otp]);
 
   const validateForm = () => {
@@ -56,11 +55,11 @@ const Signup = () => {
 
     setErrors(errors);
     setIsFormValid(formIsValid);
-    checkPasswordStrength(password);
+    // checkPasswordStrength(password);
+  };
 
-  }, [username, email, password, college, role])
 
-  const validateForm = () => {
+  const validateFormInputs = () => {
     const newErrors = {};
     if (!username) newErrors.username = "Username is required";
     if (!email) newErrors.email = "Email is required";
@@ -68,27 +67,7 @@ const Signup = () => {
     if (!role) newErrors.role = "Role is required";
     setErrors(newErrors);
     setIsFormValid(Object.keys(newErrors).length === 0);
-
   };
-
-  // const checkPasswordStrength = (password) => {
-  //   const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/;
-  //   const mediumRegex = /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})/;
-
-  //   if (strongRegex.test(password)) {
-  //     setPasswordStrength("strong");
-  //   } else if (mediumRegex.test(password)) {
-  //     setPasswordStrength("medium");
-  //   } else {
-  //     setPasswordStrength("weak");
-  //   }
-  // };
-
- 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!isFormValid) return;
-
 
   const handleOtpChange = (index, value) => {
     if (isNaN(value)) return;
@@ -115,33 +94,41 @@ const Signup = () => {
     console.log("Resending OTP...");
   };
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (isFormValid) {
       navigate("/dashboard");
 
-    try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, {
-        username,
-        email,
-        password,
-        college,
-        role,
-      });
-      if (response.status === 201) {
-        navigate("/");
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, {
+          username,
+          email,
+          password,
+          college,
+          role,
+        });
+        if (response.status === 201) {
+          navigate("/");
+        }
+      } catch (error) {
+        setErrors({ form: error.response.data });
       }
-    } catch (error) {
-      setErrors({ form: error.response.data });
-
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+    handleSignup();
+  };
+
   return (
-    <form className="auth-container" onSubmit={handleSubmit}>
+    <form className="auth-container mr-3" onSubmit={handleSubmit}>
       <div className="auth-form">
         <div className="gradlink-logo">GradLink</div>
         <p className="auth-subtitle">Join your college alumni network</p>
         <h2>Sign Up</h2>
+
+        {/* Username Input */}
         <div className="input-group">
           <input
             type="text"
@@ -151,6 +138,8 @@ const Signup = () => {
           />
           {errors.username && <div className="error-message">{errors.username}</div>}
         </div>
+
+        {/* Email Input */}
         <div className="input-group">
           <input
             type="text"
@@ -161,6 +150,8 @@ const Signup = () => {
           />
           {errors.email && <div className="error-message">{errors.email}</div>}
         </div>
+
+        {/* Password Input */}
         <div className="input-group">
           <input
             type="password"
@@ -169,27 +160,38 @@ const Signup = () => {
             required
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          {/* {errors.password && <div className="error-message">{errors.password}</div>} */}
-          {passwordStrength && (
-
           {errors.password && <div className="error-message">{errors.password}</div>}
           {/* {passwordStrength && (
-
             <div className={`password-strength strength-${passwordStrength}`}>
               Password strength: {passwordStrength}
             </div>
           )} */}
         </div>
-        <div className="input-group">
 
+        {/* College Dropdown */}
+        <div className="input-group">
           <select value={college} required onChange={(e) => setCollege(e.target.value)}>
             <option value="">Select College</option>
-            <option value="college1">College 1</option>
-            <option value="college2">College 2</option>
+            <option value="60d0fe4f5311236168a109ca">IIT Bombay</option>
+            <option value="60d0fe4f5311236168a109cb">IIT Delhi</option>
+            <option value="60d0fe4f5311236168a109cc">IIT Kanpur</option>
+            <option value="60d0fe4f5311236168a109cd">IIT Kharagpur</option>
+            <option value="60d0fe4f5311236168a109ce">IIT Madras</option>
+            <option value="60d0fe4f5311236168a109cf">IIT Roorkee</option>
+            <option value="60d0fe4f5311236168a109d0">IIT Guwahati</option>
           </select>
-          {/* {errors.college && <div className="error-message">{errors.college}</div>} */}
+          {errors.college && <div className="error-message">{errors.college}</div>}
         </div>
+
+        {/* Role Dropdown */}
+        <div className="input-group">
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
+            <option value="student">Student</option>
+            <option value="alumni">Alumni</option>
+          </select>
+        </div>
+
+        {/* OTP Section */}
         {otpSent && (
           <div className="input-group">
             <label htmlFor="otp-input">Enter OTP</label>
@@ -208,36 +210,32 @@ const Signup = () => {
               ))}
             </div>
             {errors.otp && <div className="error-message">{errors.otp}</div>}
-            <a href="/" onClick={handleResendOtp} className="resend-otp">Resend OTP</a>
+            <a href="/" onClick={handleResendOtp} className="resend-otp">
+              Resend OTP
+            </a>
           </div>
         )}
+
+        {/* OTP Button */}
         {!otpSent ? (
-          <button onClick={handleSendOtp} disabled={!email || errors.email}>Send OTP</button>
+          <button onClick={handleSendOtp} disabled={!email || errors.email}>
+            Send OTP
+          </button>
         ) : (
-          <button onClick={handleSignup} disabled={!isFormValid}>Sign Up</button>
+          <button onClick={handleSignup} disabled={!isFormValid}>
+            Sign Up
+          </button>
         )}
 
-        <select value={college} onChange={(e) => setCollege(e.target.value)}>
-          <option value="">Select College</option>
-          <option value="60d0fe4f5311236168a109ca">IIT Bombay</option>
-          <option value="60d0fe4f5311236168a109cb">IIT Delhi</option>
-          <option value="60d0fe4f5311236168a109cc">IIT Kanpur</option>
-          <option value="60d0fe4f5311236168a109cd">IIT Kharagpur</option>
-          <option value="60d0fe4f5311236168a109ce">IIT Madras</option>
-          <option value="60d0fe4f5311236168a109cf">IIT Roorkee</option>
-          <option value="60d0fe4f5311236168a109d0">IIT Guwahati</option>
-        </select>
-          {errors.college && <div className="error-message">{errors.college}</div>}
-        </div>
-        <div className="input-group">
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="student">Student</option>
-            <option value="alumni">Alumni</option>
-          </select>
-        </div>
+        {/* Form Error */}
         {errors.form && <div className="error-message">{errors.form}</div>}
-        <button type="submit" disabled={!isFormValid}>Sign Up</button>
 
+        {/* Submit Button */}
+        <button type="submit" disabled={!isFormValid}>
+          Sign Up
+        </button>
+
+        {/* Login Redirect */}
         <p>
           Already have an account? <a href="/">Login</a>
         </p>
