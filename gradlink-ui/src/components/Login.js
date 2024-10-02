@@ -50,11 +50,14 @@ const Login = () => {
 
     try {
 <<<<<<< HEAD
+<<<<<<< HEAD
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         username,
         password,
       });
 =======
+=======
+>>>>>>> b8c6838 (Setup schemas)
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/login`,
         {
@@ -62,7 +65,16 @@ const Login = () => {
           password,
         }
       );
+<<<<<<< HEAD
 >>>>>>> 8173b2d (removed parsing error from anikesh PR)
+=======
+=======
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
+        username,
+        password,
+      });
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
       if (response.status === 200) {
         navigate("/dashboard"); // Redirect to dashboard or any other page after successful login
       }
@@ -111,6 +123,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
 <<<<<<< HEAD
+<<<<<<< HEAD
           {errors.password && <div className="error-message">{errors.password}</div>}
         </div>
 
@@ -123,6 +136,8 @@ const Login = () => {
 
         {/* Signup Redirect */}
 =======
+=======
+>>>>>>> b8c6838 (Setup schemas)
           {errors.password && (
             <div className="error-message">{errors.password}</div>
           )}
@@ -131,7 +146,23 @@ const Login = () => {
           Login
         </button>
         {errors.form && <div className="error-message">{errors.form}</div>}
+<<<<<<< HEAD
 >>>>>>> 8173b2d (removed parsing error from anikesh PR)
+=======
+=======
+          {errors.password && <div className="error-message">{errors.password}</div>}
+        </div>
+
+        {/* Submit Button */}
+        <button type="submit" disabled={!isFormValid}>
+          Login
+        </button>
+
+        {errors.form && <div className="error-message">{errors.form}</div>}
+
+        {/* Signup Redirect */}
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
         <p>
           New to GradLink? <a href="/signup">Sign up</a>
         </p>

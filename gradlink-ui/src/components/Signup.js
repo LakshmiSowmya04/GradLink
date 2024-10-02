@@ -18,7 +18,11 @@ const Signup = () => {
 
   useEffect(() => {
     validateForm();
+<<<<<<< HEAD
   }, [username, email, password, college, otp]);
+=======
+  }, [email, password, college, otp]);
+>>>>>>> 9458663 (Setup schemas)
 
   const validateForm = () => {
     let errors = {};
@@ -57,6 +61,11 @@ const Signup = () => {
 
     setErrors(errors);
     setIsFormValid(formIsValid);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> b8c6838 (Setup schemas)
     // checkPasswordStrength(password);
   };
 
@@ -69,6 +78,10 @@ const Signup = () => {
     if (!role) newErrors.role = "Role is required";
     setErrors(newErrors);
     setIsFormValid(Object.keys(newErrors).length === 0);
+<<<<<<< HEAD
+=======
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
   };
 
   const handleOtpChange = (index, value) => {
@@ -97,16 +110,51 @@ const Signup = () => {
   };
 
   const handleSignup = async () => {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/signup`,
+        {
+=======
+>>>>>>> b8c6838 (Setup schemas)
     if (isFormValid) {
       navigate("/dashboard");
 
       try {
         const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/signup`, {
+<<<<<<< HEAD
+=======
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
           username,
           email,
           password,
           college,
           role,
+<<<<<<< HEAD
+        });
+        if (response.status === 201) {
+          navigate("/");
+=======
+<<<<<<< HEAD
+>>>>>>> b8c6838 (Setup schemas)
+        }
+      } catch (error) {
+        setErrors({ form: error.response.data });
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+<<<<<<< HEAD
+    handleSignup();
+=======
+    await handleSignup();
+=======
         });
         if (response.status === 201) {
           navigate("/");
@@ -121,6 +169,8 @@ const Signup = () => {
     e.preventDefault();
     if (!isFormValid) return;
     handleSignup();
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
   };
 
   return (
@@ -162,6 +212,28 @@ const Signup = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+<<<<<<< HEAD
+          {errors.password && <div className="error-message">{errors.password}</div>}
+          {/* {passwordStrength && (
+            <div className={`password-strength strength-${passwordStrength}`}>
+              Password strength: {passwordStrength}
+            </div>
+          )} */}
+=======
+<<<<<<< HEAD
+          {errors.password && (
+            <div className="error-message">{errors.password}</div>
+          )}
+>>>>>>> b8c6838 (Setup schemas)
+        </div>
+
+        {/* College Dropdown */}
+        <div className="input-group">
+<<<<<<< HEAD
+          <select value={college} required onChange={(e) => setCollege(e.target.value)}>
+=======
+          <select value={college} onChange={(e) => setCollege(e.target.value)}>
+=======
           {errors.password && <div className="error-message">{errors.password}</div>}
           {/* {passwordStrength && (
             <div className={`password-strength strength-${passwordStrength}`}>
@@ -173,6 +245,8 @@ const Signup = () => {
         {/* College Dropdown */}
         <div className="input-group">
           <select value={college} required onChange={(e) => setCollege(e.target.value)}>
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
             <option value="">Select College</option>
             <option value="60d0fe4f5311236168a109ca">IIT Bombay</option>
             <option value="60d0fe4f5311236168a109cb">IIT Delhi</option>
@@ -182,7 +256,17 @@ const Signup = () => {
             <option value="60d0fe4f5311236168a109cf">IIT Roorkee</option>
             <option value="60d0fe4f5311236168a109d0">IIT Guwahati</option>
           </select>
+<<<<<<< HEAD
           {errors.college && <div className="error-message">{errors.college}</div>}
+=======
+<<<<<<< HEAD
+          {errors.college && (
+            <div className="error-message">{errors.college}</div>
+          )}
+=======
+          {errors.college && <div className="error-message">{errors.college}</div>}
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
         </div>
 
         {/* Role Dropdown */}
@@ -224,6 +308,21 @@ const Signup = () => {
             Send OTP
           </button>
         ) : (
+<<<<<<< HEAD
+          <button onClick={handleSignup} disabled={!isFormValid}>
+=======
+<<<<<<< HEAD
+          <button type="submit" disabled={!isFormValid}>
+>>>>>>> b8c6838 (Setup schemas)
+            Sign Up
+          </button>
+        )}
+
+        {/* Form Error */}
+        {errors.form && <div className="error-message">{errors.form}</div>}
+<<<<<<< HEAD
+=======
+=======
           <button onClick={handleSignup} disabled={!isFormValid}>
             Sign Up
           </button>
@@ -231,6 +330,7 @@ const Signup = () => {
 
         {/* Form Error */}
         {errors.form && <div className="error-message">{errors.form}</div>}
+>>>>>>> b8c6838 (Setup schemas)
 
         {/* Submit Button */}
         <button type="submit" disabled={!isFormValid}>
@@ -238,6 +338,10 @@ const Signup = () => {
         </button>
 
         {/* Login Redirect */}
+<<<<<<< HEAD
+=======
+>>>>>>> 9458663 (Setup schemas)
+>>>>>>> b8c6838 (Setup schemas)
         <p>
           Already have an account? <a href="/">Login</a>
         </p>
