@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import '../styles/signup.css';
+import "../styles/signup.css";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,7 +13,7 @@ const Login = () => {
 
   useEffect(() => {
     validateForm();
-  }, [email, password]);
+  }, [username, email, password]);
 
   const validateForm = () => {
     let errors = {};
@@ -49,10 +49,13 @@ const Login = () => {
     if (!isFormValid) return;
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}api/auth/login`, {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        {
+          username,
+          password,
+        }
+      );
       if (response.status === 200) {
         navigate("/dashboard"); // Redirect to dashboard or any other page after successful login
       }
@@ -74,7 +77,9 @@ const Login = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          {errors.username && <div className="error-message">{errors.username}</div>}
+          {errors.username && (
+            <div className="error-message">{errors.username}</div>
+          )}
         </div>
         <div className="input-group">
           <input
@@ -92,16 +97,14 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-
-          {/* {errors.password && <div className="error-message">{errors.password}</div>} */}
+          {errors.password && (
+            <div className="error-message">{errors.password}</div>
+          )}
         </div>
-    
-        <button onClick={handleLogin} disabled={!isFormValid}>Login</button>
-          {errors.password && <div className="error-message">{errors.password}</div>}
-        </div>
+        <button type="submit" disabled={!isFormValid}>
+          Login
+        </button>
         {errors.form && <div className="error-message">{errors.form}</div>}
-        <button disabled={!isFormValid}>Login</button>
-
         <p>
           New to GradLink? <a href="/signup">Sign up</a>
         </p>
