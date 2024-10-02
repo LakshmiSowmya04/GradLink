@@ -4,9 +4,11 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Post = require("../models/Post");
 const Chat = require("../models/Chat");
+const Otp = require('../models/Otp');
 const router = express.Router();
 const cookieOptions = require("../lib/constant");
-
+const otpGenerator = require('../lib/otp-generator');
+const otpValidator = require('../lib/otp-validator');
 // Sign Up
 router.post("/signup", async (req, res) => {
   const { username, email, password, college, role } = req.body;
@@ -129,3 +131,27 @@ router.get("/chat/:userId", async (req, res) => {
 });
 
 module.exports = router;
+
+router.post('/sendOtp' , async (req, res) => {
+  const { email } = req.body;
+  const otp = otpGenerator();
+  const OTP = new Otp({ otp, action: 'verify-email', email, expiry: new Date(Date.now() + 600000) });
+  await OTP.save();
+  const sendOtp = require('../sendOtpService');
+  sendOtp(otp, email);
+  res.status(200).send('OTP sent');
+})
+
+router.post('/validate-otp', async (req, res) => {
+  const { email, otp } = req.body;
+if (!email || !otp) {
+    return res.status(400).send('Email and OTP are required.' );
+  }
+  
+  try {
+    const result = await otpValidator(email , otp);
+    return res.status(result.status).json({ message: result.message });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+})

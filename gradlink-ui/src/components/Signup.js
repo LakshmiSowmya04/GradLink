@@ -75,13 +75,41 @@ const Signup = () => {
       otpInputs.current[index - 1].focus();
     }
   };
-
-  const handleSendOtp = () => {
-    setOtpSent(true);
+  //sending Otp
+  const sendOtp = async (email) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/sendOtp', { email });
+      if (response.status === 200) {
+        console.log('OTP sent successfully:', response.data);
+        setOtpSent(true);
+      }
+    } catch (error) {
+      console.error('Error sending OTP:', error.response ? error.response.data : error.message);
+      setOtpSent(false);
+    }
   };
-
+  const handleSendOtp = () => {
+    sendOtp(email);
+  };
+  const validateOtp = async (email, otp) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/validate-otp', { email, otp });
+      if (response.status === 200) {
+        console.log('OTP validated successfully:', response.data);
+        
+        // Proceed with next steps after successful OTP validation
+      }
+    } catch (error) {
+      console.error('Error validating OTP:', error.response ? error.response.data : error.message);
+      // Handle error message (e.g., display to the user)
+    }
+  };
+  
+  const handleValidateOtp = ()=> {
+    validateOtp(email , otp.join(''));
+  }
   const handleResendOtp = () => {
-    console.log("Resending OTP...");
+    sendOtp(email);
   };
 
   const handleSignup = async () => {
@@ -175,9 +203,7 @@ const Signup = () => {
               ))}
             </div>
             {errors.otp && <div className="error-message">{errors.otp}</div>}
-            <a href="/" onClick={handleResendOtp} className="resend-otp">
-              Resend OTP
-            </a>
+            <button onClick={handleResendOtp} className="resend-otp">Resend OTP</button>
           </div>
         )}
         {!otpSent ? (
@@ -185,9 +211,7 @@ const Signup = () => {
             Send OTP
           </button>
         ) : (
-          <button type="submit" disabled={!isFormValid}>
-            Sign Up
-          </button>
+          <button onClick={handleValidateOtp} >Validate Otp</button>
         )}
         <select value={college} onChange={(e) => setCollege(e.target.value)}>
           <option value="">Select College</option>
@@ -212,6 +236,9 @@ const Signup = () => {
         <p>
           Already have an account? <a href="/">Login</a>
         </p>
+          <button type="submit" disabled={!isFormValid}>
+            Sign Up
+          </button>
       </div>
     </form>
   );
