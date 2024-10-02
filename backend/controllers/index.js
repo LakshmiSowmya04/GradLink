@@ -1,3 +1,8 @@
-import { SignupUser, LoginUser, getUser } from "./usercontrollers.js";
+import {
+  SignupUser,
+  LoginUser,
+  getUser,
+  verifyEmail,
+} from "./usercontrollers.js";
 
-export { SignupUser, LoginUser, getUser };
+export { SignupUser, LoginUser, getUser, verifyEmail };

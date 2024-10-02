@@ -3,6 +3,8 @@ import apiRoutes from "./routes/index.js";
 import { PORT, dbConnection } from "./config/index.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { deleteUnverifiedUsers } from "./controllers/usercontrollers.js";
+import cron from "node-cron";
 
 const startServer = async () => {
   try {
@@ -17,6 +19,8 @@ const startServer = async () => {
     app.use(cookieParser());
     app.use(cors());
 
+    //cleanup for unverified users
+    cron.schedule("0 0 * * *", deleteUnverifiedUsers);
     // defining the central route here
     app.use("/api", apiRoutes); // /api
     app.get("/", (req, res) => {
