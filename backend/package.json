@@ -23,6 +23,7 @@
     "nodemailer": "^6.9.15"
   },
   "devDependencies": {
+    "node-cron": "^3.0.3",
     "nodemon": "^3.1.7"
   }
 }

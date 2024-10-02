@@ -10,7 +10,7 @@ import {
 
 // Function to send a verification email
 async function sendVerificationEmail(email, verificationToken) {
-  const sender = "Ecommerce-Company";
+  const sender = "Grandlink";
   const recipient = email;
 
   try {
