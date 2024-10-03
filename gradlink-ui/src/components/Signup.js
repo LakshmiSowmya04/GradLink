@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
 import "../styles/signup.css";
 
@@ -8,17 +8,14 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [college, setCollege] = useState("");
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [role, setRole] = useState("student"); // Default role
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
   const navigate = useNavigate();
-  const otpInputs = useRef([]);
 
   useEffect(() => {
     validateForm();
-  }, [username, email, password, college, otp]);
+  }, [username, email, password, college]);
 
   const validateForm = () => {
     let errors = {};
@@ -50,68 +47,14 @@ const Signup = () => {
       errors["college"] = "Please select a college";
     }
 
-    if (otpSent && otp.some((digit) => digit === "")) {
-      formIsValid = false;
-      errors["otp"] = "Please enter the complete OTP";
-    }
-
     setErrors(errors);
     setIsFormValid(formIsValid);
   };
 
-  const handleOtpChange = (index, value) => {
-    if (isNaN(value)) return;
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+ 
 
-    if (value !== "" && index < 5) {
-      otpInputs.current[index + 1].focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index, e) => {
-    if (e.key === "Backspace" && index > 0 && otp[index] === "") {
-      otpInputs.current[index - 1].focus();
-    }
-  };
-  //sending Otp
-  const sendOtp = async (email) => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/sendOtp', { email });
-      if (response.status === 200) {
-        console.log('OTP sent successfully:', response.data);
-        setOtpSent(true);
-      }
-    } catch (error) {
-      console.error('Error sending OTP:', error.response ? error.response.data : error.message);
-      setOtpSent(false);
-    }
-  };
-  const handleSendOtp = () => {
-    sendOtp(email);
-  };
-  const validateOtp = async (email, otp) => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/auth/validate-otp', { email, otp });
-      if (response.status === 200) {
-        console.log('OTP validated successfully:', response.data);
-        
-        // Proceed with next steps after successful OTP validation
-      }
-    } catch (error) {
-      console.error('Error validating OTP:', error.response ? error.response.data : error.message);
-      // Handle error message (e.g., display to the user)
-    }
-  };
+ 
   
-  const handleValidateOtp = ()=> {
-    validateOtp(email , otp.join(''));
-  }
-  const handleResendOtp = () => {
-    sendOtp(email);
-  };
-
   const handleSignup = async () => {
     try {
       const response = await axios.post(
@@ -125,7 +68,7 @@ const Signup = () => {
         }
       );
       if (response.status === 201) {
-        navigate("/");
+        navigate("/otp" , {state: {email}});
       }
     } catch (error) {
       setErrors({ form: error.response.data });
@@ -134,8 +77,9 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isFormValid) return;
-    await handleSignup();
+    navigate("/otp" , {state: {email}});
+    // if (!isFormValid) return;
+    // await handleSignup();
   };
 
   return (
@@ -175,44 +119,7 @@ const Signup = () => {
             <div className="error-message">{errors.password}</div>
           )}
         </div>
-        <div className="input-group">
-          <select value={college} onChange={(e) => setCollege(e.target.value)}>
-            <option value="">Select College</option>
-            <option value="college1">College 1</option>
-            <option value="college2">College 2</option>
-          </select>
-          {errors.college && (
-            <div className="error-message">{errors.college}</div>
-          )}
-        </div>
-        {otpSent && (
-          <div className="input-group">
-            <label htmlFor="otp-input">Enter OTP</label>
-            <div className="otp-input-container">
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength="1"
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                  ref={(el) => (otpInputs.current[index] = el)}
-                  className="otp-input"
-                />
-              ))}
-            </div>
-            {errors.otp && <div className="error-message">{errors.otp}</div>}
-            <button onClick={handleResendOtp} className="resend-otp">Resend OTP</button>
-          </div>
-        )}
-        {!otpSent ? (
-          <button onClick={handleSendOtp} disabled={!email || errors.email}>
-            Send OTP
-          </button>
-        ) : (
-          <button onClick={handleValidateOtp} >Validate Otp</button>
-        )}
+
         <select value={college} onChange={(e) => setCollege(e.target.value)}>
           <option value="">Select College</option>
           <option value="60d0fe4f5311236168a109ca">IIT Bombay</option>
@@ -236,7 +143,7 @@ const Signup = () => {
         <p>
           Already have an account? <a href="/">Login</a>
         </p>
-          <button type="submit" disabled={!isFormValid}>
+          <button type="submit">
             Sign Up
           </button>
       </div>
