@@ -1,3 +1,4 @@
-import authCheck from "./AuthCheck";
+import authCheck from "./AuthCheck.js";
+import validateUser from "./UserValidator.js";
 
-export { authCheck };
+export { authCheck, validateUser };
