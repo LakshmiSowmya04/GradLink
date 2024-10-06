@@ -1,9 +1,9 @@
-
 # 🎓 GradLink
 
 Welcome to **GradLink**, an engaging online platform connecting alumni from various colleges. Whether you're looking to network, share experiences, or simply catch up with fellow alumni, GradLink provides a seamless experience for building meaningful connections.
 
 ### 🚀 Hacktoberfest 2024
+
 We're participating in **Hacktoberfest**! Contributions are welcome. Join the conversation in our [Discord Channel](https://discord.gg/) for guidance and collaboration.
 
 ---
@@ -33,7 +33,6 @@ We're participating in **Hacktoberfest**! Contributions are welcome. Join the co
   <img height="50" src="https://img.shields.io/badge/MongoDB-%234ea94b.svg?logo=mongodb&logoColor=white" alt="Mongo" title="Github" /> 
 </div>
 
-
 ---
 
 ## 🚀 Getting Started
@@ -58,3 +57,15 @@ If you're interested in contributing to the **Frontend**:
 ---
 
 Join us today to contribute and build an amazing community for alumni! 🎉
+
+## Contributing People List
+
+> Contributions are welcome!
+
+Specially thanks ❤️ for contributors bellow:
+
+<a href="https://github.com/jahnvisahni31/github-readme-profile/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=LakshmiSowmya04/LakshmiSowmya04" />
+</a>
+
+## Contributors
