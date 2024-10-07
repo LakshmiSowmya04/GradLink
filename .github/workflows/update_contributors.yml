@@ -1,0 +1,123 @@
+name: Update Contributors
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 0 * * 0" # Runs at 00:00 on Sunday
+
+jobs:
+  update-contributors:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Configure user information
+        run: |
+          git config --global user.email "github-actions@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+      - name: Create and run update script
+        run: |
+          cat > update_contributors.py << 'EOF'
+          import subprocess
+          import re
+          import os
+
+          def normalize_name(name):
+              name = re.sub(r'\[bot\]$', '', name)
+              if name.lower() in ['github action', 'github actions', 'github-actions']:
+                  return None
+              return name.strip()
+
+          def get_contributors():
+              try:
+                  git_log = subprocess.check_output(
+                      ['git', 'log', '--format="%aN <%aE>"'],
+                      universal_newlines=True,
+                      stderr=subprocess.STDOUT
+                  )
+              except subprocess.CalledProcessError as e:
+                  print(f"Error getting git log: {e.output}")
+                  return []
+
+              contributors_dict = {}
+              for line in git_log.replace('"', '').split('\n'):
+                  if not line:
+                      continue
+
+                  name = normalize_name(line.split(' <')[0])  # Extract name from 'Name <email>'
+                  if not name:
+                      continue
+
+                  email = line.split('<')[-1].strip('>')  # Extract email from 'Name <email>'
+                  contributors_dict[name] = email
+
+              return sorted(contributors_dict.items())
+
+          def format_contributors_table(contributors):
+              table = ""
+              for i in range(0, len(contributors), 10):
+                  row1 = " | ".join(f"[{name}](https://github.com/{name})" for name, _ in contributors[i:i+10])
+                  if row1.strip():
+                      table += f"| {row1} |\n"
+              return table
+
+          def update_readme():
+              if not os.path.exists('README.md'):
+                  print("README.md not found!")
+                  return False
+
+              try:
+                  with open('README.md', 'r', encoding='utf-8') as f:
+                      content = f.read()
+
+                  contributors = get_contributors()
+                  if not contributors:
+                      print("No contributors found!")
+                      return False
+
+                  contributors_table = "## Contributors\n\n" + format_contributors_table(contributors) + "\n"
+                  contributors_pattern = r'## Contributors\s*\n(?:.*\n)*?(?=\n##|\Z)'
+
+                  new_content = re.sub(contributors_pattern, contributors_table, content, flags=re.DOTALL)
+                  with open('README.md', 'w', encoding='utf-8') as f:
+                      f.write(new_content)
+
+                  return True
+
+              except Exception as e:
+                  print(f"Error updating README.md: {e}")
+                  return False
+
+          if __name__ == "__main__":
+              success = update_readme()
+              if not success:
+                  exit(1)
+              print("Successfully updated contributors!")
+          EOF
+
+          python update_contributors.py
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet README.md; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git add README.md
+          git commit -m "docs: update contributors list"
+          git push
