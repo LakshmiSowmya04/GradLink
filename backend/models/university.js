@@ -7,14 +7,22 @@ const universitySchema = new mongoose.Schema(
       required: true,
     },
     establishedOn: {
-      type: DateTime,
+      type: String,
       required: true,
     },
     description: {
       type: String,
       required: true,
     },
-    users: [
+    website: {
+      type: String,
+      required: true,
+    },
+    admin: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    people: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
