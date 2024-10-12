@@ -60,13 +60,7 @@ Join us today to contribute and build an amazing community for alumni! 🎉
 
 ## Contributing People List
 
-> Contributions are welcome!
-
-Specially thanks ❤️ for contributors bellow:
-
-<a href="https://github.com/jahnvisahni31/github-readme-profile/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=LakshmiSowmya04/LakshmiSowmya04" />
-</a>
+- Contributions are welcome!
 
 ## Contributors
 
