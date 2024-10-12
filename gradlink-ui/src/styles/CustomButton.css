@@ -1,0 +1,58 @@
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+    outline: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .button:focus-visible {
+    outline: 2px solid var(--ring-color);
+    outline-offset: 2px;
+  }
+  
+  .button:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  
+  /* Variant styles */
+  .button.default {
+    background-color: var(--primary-color);
+    color: var(--primary-foreground-color);
+  }
+  
+  .button.default:hover {
+    background-color: var(--primary-hover-color);
+  }
+  
+  .button.ghost {
+    background-color: transparent;
+  }
+  
+  .button.ghost:hover {
+    background-color: var(--accent-color);
+    color: var(--accent-foreground-color);
+  }
+  
+  /* Size styles */
+  .button.default {
+    height: 40px;
+    padding: 8px 16px;
+  }
+  
+  .button.icon {
+    height: 40px;
+    width: 40px;
+  }
+  
+  /* Icon styles */
+  .icon {
+    height: 20px;
+    width: 20px;
+  }
