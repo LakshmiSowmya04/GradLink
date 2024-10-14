@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import useAuthMutation from "../hooks/useAuthMutation";
 import "../styles/signup.css";
 
 const Login = () => {
@@ -10,6 +10,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
+  const loginMutation = useAuthMutation(`${process.env.REACT_APP_API_URL}/api/auth/login`);
 
   useEffect(() => {
     validateForm();
@@ -49,18 +50,12 @@ const Login = () => {
     if (!isFormValid) return;
 
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/login`,
-        {
-          username,
-          password,
-        }
-      );
-      if (response.status === 200) {
-        navigate("/dashboard"); // Redirect to dashboard or any other page after successful login
+      const response = await loginMutation.mutateAsync({ username, password });
+      if (response) {
+        navigate("/dashboard");
       }
     } catch (error) {
-      setErrors({ form: error.response.data });
+      setErrors({ form: error.response?.data || "An error occurred during login" });
     }
   };
 

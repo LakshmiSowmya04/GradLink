@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import useAuthMutation from '../hooks/useAuthMutation';
 import '../styles/otp.css';
 
 const Otp = () => {
@@ -14,24 +14,25 @@ const Otp = () => {
     const [errormsg, setErrorMsg] = useState("");
     const [attempts, setAttempts] = useState(0); // State to track the number of attempts
     const [counter, setCounter] = useState(0);
+    const sendOtpMutation = useAuthMutation('http://localhost:5000/api/auth/sendOtp');
+    const validateOtpMutation = useAuthMutation('http://localhost:5000/api/auth/validate-otp');
+
     const sendOtp = async () => {
         setErrorMsg("");
         setError("");
         setMssg("Sending Otp");
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/sendOtp', { email });
-            if (response.status === 200) {
-                console.log('OTP sent successfully:', response.data);
-                setCounter(59);
-                // Start the timer when OTP is sent
-            }
+            const response = await sendOtpMutation.mutateAsync({ email });
+            console.log('OTP sent successfully:', response);
+            setCounter(59);
         } catch (error) {
-            console.error('Error sending OTP:', error.response ? error.response.data : error.message);
+            console.error('Error sending OTP:', error);
             setError(error.message);
         } finally {
             setLoading(false);
         }
     };
+
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     const validateOtp = async () => {
         if(otp.join('').length < 6){
@@ -40,15 +41,12 @@ const Otp = () => {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/validate-otp', { email, otp: otp.join('') });
-            if (response.status === 200) {
-                // Redirect to dashboard after successful OTP validation
-                setMssg('OTP validated successfully. Navigating to dashbaord');
-                await delay(5000);
-                navigate('/dashboard');
-            }
+            const response = await validateOtpMutation.mutateAsync({ email, otp: otp.join('') });
+            setMssg('OTP validated successfully. Navigating to dashboard');
+            await delay(5000);
+            navigate('/dashboard');
         } catch (error) {
-            console.error('Error validating OTP:', error.response ? error.response.data : error.message);
+            console.error('Error validating OTP:', error);
             setAttempts((prevAttempts) => prevAttempts + 1); // Increment attempts
             setErrorMsg("Invalid OTP. Please try again.");
             // Check if the attempts exceed the maximum limit
