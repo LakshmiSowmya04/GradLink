@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate} from "react-router-dom";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/signup.css";
+import useAuthMutation from "../hooks/useAuthMutation";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -12,6 +12,7 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const navigate = useNavigate();
+  const signupMutation = useAuthMutation(`${process.env.REACT_APP_API_URL}/api/auth/signup`);
 
   useEffect(() => {
     validateForm();
@@ -51,35 +52,27 @@ const Signup = () => {
     setIsFormValid(formIsValid);
   };
 
- 
-
- 
-  
   const handleSignup = async () => {
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/auth/signup`,
-        {
-          username,
-          email,
-          password,
-          college,
-          role,
-        }
-      );
-      if (response.status === 201) {
-        navigate("/otp" , {state: {email}});
+      const response = await signupMutation.mutateAsync({
+        username,
+        email,
+        password,
+        college,
+        role,
+      });
+      if(response){
+        navigate("/otp", { state: { email } });
       }
     } catch (error) {
-      setErrors({ form: error.response.data });
+      setErrors({ form: error.response?.data || "An error occurred during signup" });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/otp" , {state: {email}});
-    // if (!isFormValid) return;
-    // await handleSignup();
+    if (!isFormValid) return;
+    await handleSignup();
   };
 
   return (
